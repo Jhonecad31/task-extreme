@@ -1,0 +1,37 @@
+name: task-extreme
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    init: true
+    environment:
+      NODE_ENV: production
+      APP_ORIGIN: ${APP_ORIGIN:?Configura APP_ORIGIN}
+      INITIAL_ADMIN_EMAIL: ${INITIAL_ADMIN_EMAIL:?Configura INITIAL_ADMIN_EMAIL}
+      SESSION_HOURS: ${SESSION_HOURS:-12}
+      TRUST_PROXY: "1"
+    volumes:
+      - task_data:/app/data
+      - ./backups:/app/backups
+    networks: [backend]
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443", "443:443/udp"]
+    environment:
+      DOMAIN: ${DOMAIN:?Configura DOMAIN}
+      TLS_EMAIL: ${TLS_EMAIL:?Configura TLS_EMAIL}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks: [backend]
+    depends_on:
+      app:
+        condition: service_healthy
+volumes:
+  task_data:
+  caddy_data:
+  caddy_config:
+networks:
+  backend:

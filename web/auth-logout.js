@@ -1,0 +1,2 @@
+async function signOut(){try{const response=await fetch('/api/auth/logout',{method:'POST'});if(!response.ok)throw Error('No se pudo cerrar la sesión. Reintenta.');for(const key of Object.keys(localStorage))if(key.startsWith('nexo-'))localStorage.removeItem(key);location.assign('/login')}catch(error){document.getElementById('logouterror').textContent=error.message}}
+document.getElementById('logoutconfirm').onclick=signOut;
