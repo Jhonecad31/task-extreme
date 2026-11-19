@@ -1,0 +1,1 @@
+Task Extreme includes SheetJS Community Edition 0.20.3 (xlsx.full.min.js), copyright SheetJS LLC, distributed under the Apache License 2.0. Source: https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js . The original license header is retained in the vendored file. SheetJS: https://sheetjs.com/ .

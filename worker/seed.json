@@ -1,0 +1,26 @@
+{
+  "primaryAdminId": "user-0",
+  "roleModelVersion": 1,
+  "teamScopeVersion": 1,
+  "users": [
+    {
+      "id": "user-0",
+      "name": "Administrador principal",
+      "email": "",
+      "role": "principal",
+      "createdBy": "user-0",
+      "grants": {},
+      "agentAssignments": []
+    }
+  ],
+  "activeCompany": null,
+  "activeWorkspace": null,
+  "tasks": [],
+  "events": [],
+  "companies": [],
+  "workspaces": [],
+  "groups": [],
+  "columns": [],
+  "statusConfigs": [],
+  "trash": []
+}

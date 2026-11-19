@@ -1,0 +1,18 @@
+{
+  "name": "task-extreme",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Gestión de empresas, equipos y actividades para VPS propio",
+  "engines": {
+    "node": ">=24.13.0 <25"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "node --env-file-if-exists=.env vps/main.mjs",
+    "init-admin": "node --env-file-if-exists=.env vps/admin-cli.mjs init",
+    "reset-admin": "node --env-file-if-exists=.env vps/admin-cli.mjs reset",
+    "backup": "node --env-file-if-exists=.env vps/backup.mjs",
+    "test": "npm run build && node tests/vps.test.mjs && node scripts/test-client.cjs && node scripts/test-team-client.cjs && node scripts/test-search-theme.cjs && node scripts/test-role-home.cjs && node scripts/test-monday.cjs && node scripts/test-team-scope.mjs && node scripts/test-cloud.mjs && node tests/backup.test.mjs && node tests/empty-client.cjs && node tests/http-live.test.mjs"
+  }
+}

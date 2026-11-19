@@ -1,0 +1,1 @@
+export function configuration(){return {origin:process.env.APP_ORIGIN||'http://localhost:3000',adminEmail:process.env.INITIAL_ADMIN_EMAIL,dbPath:process.env.DB_PATH||'./data/task-extreme.sqlite',production:process.env.NODE_ENV==='production',sessionHours:process.env.SESSION_HOURS||12}}

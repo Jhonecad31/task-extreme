@@ -1,0 +1,16 @@
+name: Validar Task Extreme
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm test
+      - run: docker compose --env-file .env.example config --quiet
+      - run: docker build -t task-extreme .
+      - run: docker run --rm --network none task-extreme npm test
