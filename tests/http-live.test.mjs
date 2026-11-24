@@ -11,6 +11,15 @@ const server=createHttpServer(app,{origin:config.origin});await new Promise(reso
 async function call(path,method='GET',body){const headers={origin:config.origin};if(cookie)headers.cookie=cookie;if(body&&!(body instanceof FormData))headers['content-type']='application/json';const r=await fetch(base+path,{method,headers,body:body?body instanceof FormData?body:JSON.stringify(body):undefined});if(r.headers.get('set-cookie'))cookie=r.headers.get('set-cookie').split(';')[0];return r}
 const abort=new AbortController();
 try{
+ for(const [path,method,status] of [['/login','GET',200],['/login','HEAD',200],['/style.css','GET',200],['/api/state','GET',401]]){
+  const page=await call(path,method);
+  assert.equal(page.status,status);
+  assert.equal(page.headers.get('x-robots-tag'),'noindex, nofollow');
+  await page.body?.cancel();
+ }
+ const redirect=await fetch(base+'/',{redirect:'manual'});
+ assert.equal(redirect.status,302);
+ assert.equal(redirect.headers.get('x-robots-tag'),'noindex, nofollow');
  let r=await call('/api/auth/login','POST',{email:config.adminEmail,password});assert.equal(r.status,200);let current=await (await call('/api/state')).json();const state=current.state;
  state.companies.push({id:'company',name:'Empresa de prueba',createdBy:'user-0'});state.workspaces.push({id:'workspace',name:'Operaciones',companyId:'company',projects:['Proyecto'],projectCreators:{Proyecto:'user-0'},createdBy:'user-0'});state.tasks.push({id:10,title:'Actividad HTTP',workspaceId:'workspace',project:'Proyecto',createdBy:'user-0',assigneeIds:['user-0'],owner:'Administrador principal',parentId:null,status:'Pendiente',priority:'Media',start:'2027-01-01',end:'2027-01-02',notes:[]});r=await call('/api/state','POST',current);assert.equal(r.status,200);current=await r.json();
  const form=new FormData();form.set('taskId','10');form.set('file',new File(['Contenido persistente'],'documento.txt',{type:'text/plain'}));r=await call('/api/files','POST',form);assert.equal(r.status,201);const file=await r.json();r=await call('/api/updates','POST',{taskId:10,text:'Comentario HTTP',files:[file]});assert.equal(r.status,201);r=await call('/api/files/'+file.id);assert.equal(r.status,200);assert.equal(await r.text(),'Contenido persistente');

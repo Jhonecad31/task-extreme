@@ -1,7 +1,7 @@
 if(!Array.isArray(data.statusConfigs))data.statusConfigs=[];
-const defaultStatusColors={'Pendiente':'#F1F1EB','En curso':'#E9F0FB','En revisión':'#FAF1D9','Pausada':'#F4E6DF','Completada':'#E5F2E9'};
+const defaultStatusColors={'Pendiente':'#475569','En curso':'#1D4ED8','En revisión':'#FBBF24','Pausada':'#C2410C','Completada':'#047857'};
 function boardStatusConfig(task){return data.statusConfigs.find(c=>c.workspaceId===(task?.workspaceId||workspaceId)&&c.project===(task?.project||nav))}
-function statusAppearance(key,task){const option=boardStatusConfig(task)?.options?.find(o=>o.key===key);return {label:option?.label||key,color:validOptionColor(option?.color)?option.color:defaultStatusColors[key]||'#E5F2E9'}}
+function statusAppearance(key,task){const option=boardStatusConfig(task)?.options?.find(o=>o.key===key);return {label:option?.label||key,color:validOptionColor(option?.color)?option.color:defaultStatusColors[key]||'#047857'}}
 function canEditBoardStatus(){return !!workspaceId&&workspace().projects.includes(nav)&&clientProjectEditable(workspace(),nav)}
 function statusHeader(){return `${esc(boardStatusConfig()?.title||'Estado')} ${canEditBoardStatus()?'<button class="column-edit-icon" data-edit-status aria-label="Editar nombre, textos y colores del estado">✎</button>':''}`}
 function statusSelectStyle(task){const option=statusAppearance(task.status,task);return `style="background-color:${option.color};color:${optionTextColor(option.color)}"`}

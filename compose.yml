@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
     ports: ["80:80", "443:443", "443:443/udp"]
     environment:
-      DOMAIN: ${DOMAIN:-tareas.tudominio.com}
+      DOMAIN: ${DOMAIN:-task.extremegroup.info}
       TLS_EMAIL: ${TLS_EMAIL:-admin@tudominio.com}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro

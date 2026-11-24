@@ -2,6 +2,7 @@ import {createServer} from 'node:http';
 import {once} from 'node:events';
 export function createHttpServer(app,{origin,trustProxy=false}){
  const server=createServer(async(req,res)=>{
+  res.setHeader('X-Robots-Tag','noindex, nofollow');
   const controller=new AbortController();res.on('close',()=>controller.abort());
   try{
    const max=22*1024*1024;let total=0;const chunks=[];

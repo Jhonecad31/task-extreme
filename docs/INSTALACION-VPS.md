@@ -4,7 +4,7 @@ Task Extreme usa HTML, CSS y JavaScript en el navegador, Node.js 24 y SQLite en 
 
 ## 1. Dominio, DNS y firewall
 
-Crea un registro A para `tareas.tudominio.com` con la IPv4 pública del VPS. Añade AAAA si tienes IPv6 operativa. Permite TCP 80 y 443 y conserva el acceso a tu puerto SSH. El puerto 3000 queda en loopback.
+Crea un registro A para `task.extremegroup.info` con la IPv4 pública del VPS. Añade AAAA si tienes IPv6 operativa. Permite TCP 80 y 443 y conserva el acceso a tu puerto SSH. El puerto 3000 queda en loopback.
 
 Instala Docker Engine y Compose v2 según la [guía oficial para Ubuntu](https://docs.docker.com/engine/install/ubuntu/). Con Apache ya instalado:
 
@@ -25,7 +25,7 @@ chmod 600 .env
 nano .env
 ```
 
-Configura `APP_ORIGIN=https://tareas.tudominio.com`, sin barra final, y `INITIAL_ADMIN_EMAIL=admin@tudominio.com` con tu correo. Compose selecciona producción, usa sesiones de 12 horas por defecto y limita el puerto de la aplicación al equipo local. Las contraseñas se introducen en terminal o en la interfaz. La aplicación crea SQLite y aplica las migraciones al iniciar.
+Configura `APP_ORIGIN=https://task.extremegroup.info`, sin barra final, y `INITIAL_ADMIN_EMAIL=admin@tudominio.com` con tu correo. Compose selecciona producción, usa sesiones de 12 horas por defecto y limita el puerto de la aplicación al equipo local. Las contraseñas se introducen en terminal o en la interfaz. La aplicación crea SQLite y aplica las migraciones al iniciar.
 
 ```bash
 mkdir -p backups
@@ -48,27 +48,29 @@ Si Apache ya tiene un certificado para el subdominio, usa sus rutas en el Virtua
 ```bash
 sudo tee /etc/apache2/sites-available/task-extreme.conf >/dev/null <<'EOF'
 <VirtualHost *:80>
-    ServerName tareas.tudominio.com
+    ServerName task.extremegroup.info
 </VirtualHost>
 EOF
 sudo a2ensite task-extreme
 sudo apache2ctl configtest
 sudo systemctl reload apache2
-sudo certbot certonly --apache -d tareas.tudominio.com
+sudo certbot certonly --apache -d task.extremegroup.info
 ```
 
-Sustituye el dominio de ejemplo por el tuyo tanto en los comandos como en el archivo de configuración que se copia a continuación. Si ese dominio ya tiene un VirtualHost administrado por un panel, incorpora allí las directivas del proxy.
+Si ese dominio ya tiene un VirtualHost administrado por un panel, incorpora allí las directivas del proxy.
 
 ```bash
 sudo install -m 644 deploy/apache/task-extreme.conf /etc/apache2/sites-available/task-extreme.conf
-sudoedit /etc/apache2/sites-available/task-extreme.conf
 sudo a2ensite task-extreme
 sudo apache2ctl configtest
 sudo systemctl reload apache2
-curl -fsS https://tareas.tudominio.com/healthz
-curl -I http://tareas.tudominio.com/login
+curl -fsS https://task.extremegroup.info/healthz
+curl -I http://task.extremegroup.info/login
+curl -I https://task.extremegroup.info/login
 sudo certbot renew --dry-run
 ```
+
+Las respuestas deben incluir `X-Robots-Tag: noindex, nofollow`. Mantén la página de inicio de sesión accesible para que Google pueda leer `noindex`. Un bloqueo general en `robots.txt` impediría que Google vea el encabezado. El contenido privado sigue protegido por el inicio de sesión. [Documentación de Google](https://developers.google.com/search/docs/crawling-indexing/block-indexing)
 
 Si Certbot gestiona el certificado, añade un hook de despliegue para que Apache cargue el certificado renovado:
 
@@ -117,7 +119,7 @@ sudo docker compose run --rm --no-deps app npm run backup
 git pull --ff-only
 sudo docker compose up -d --build app
 sudo docker compose logs --tail=80 app
-curl -fsS https://tareas.tudominio.com/healthz
+curl -fsS https://task.extremegroup.info/healthz
 ```
 
 `docker compose down` conserva el volumen. `docker compose down -v` borra los datos persistentes.
